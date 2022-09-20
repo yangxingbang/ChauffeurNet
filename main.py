@@ -12,7 +12,7 @@ from download_data import check_if_data_exists
 #TODO save .blend file somewhere with the world
 
 def main():
-    check_if_data_exists()
+    result = check_if_data_exists()
 
     record = False
     do_train = False

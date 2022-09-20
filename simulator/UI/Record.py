@@ -14,11 +14,15 @@ ESC save driving session
 Note! You should drive for a bit more than Config.horizon*Config.num_skip_poses frames (otherwise error at training)
 """
 
-class Recorder(GUI):
 
+class Recorder(GUI): # GUI是Recorder的基类
+    # Recorder包含车辆，GUI(包含鼠标订阅器，world(包含actor， world文件的路径， 交通灯文件的路径)，摄像头，按键，图片显示，窗口名，是否运行，时间步)
+    # 还包含在线控制器，事件包
     def __init__(self, event_bag_path="", world_path="" ):
         super(Recorder, self).__init__("Simulator", world_path=world_path)
+        # 交通灯列表
         self.traffic_lights = self.world.get_traffic_lights()
+        # self为什么能有成员world?
         self.vehicle = Vehicle(camera=self.camera, play=True, traffic_lights=self.traffic_lights, all_actors=self.world.actors)
         self.world.actors.append(self.vehicle)
         self.vehicle.is_active = True

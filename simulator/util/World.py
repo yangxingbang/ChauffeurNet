@@ -34,8 +34,9 @@ def synchronized(wrapped):
             return result
     return _wrap
 
-class World(Actor):
 
+class World(Actor):
+    # world中包含actor， world文件的路径， 交通灯文件的路径
     def __init__(self, actors = [], world_path = "", traffic_lights_path = "" ):
         super().__init__()
         self.actors = actors
@@ -102,6 +103,7 @@ class World(Actor):
         if camera is None:
             camera = Camera()
             self.actors.append(camera)
+            print("No camera")
         return camera
 
     def read_obj_file(self, path):
@@ -173,6 +175,7 @@ class World(Actor):
         from simulator.util.TrafficLight import TrafficLight
         if not os.path.exists(self.save_path):
             raise ("No world available")
+        print("No world available")
         all_objects = self.read_obj_file(self.save_path)
 
         for obj_name in all_objects.keys():

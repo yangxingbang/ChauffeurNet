@@ -21,10 +21,11 @@ class Renderer:
 
         self.camera = self.world.get_camera_from_actors()
         self.vehicle = Vehicle(self.camera, play =False)
+        print(self.vehicle.vertices_W)
         self.world.actors.append(self.vehicle)
 
-        self.event_bag = EventBag(event_bag_path, record=False)
-        self.path = Path(self.event_bag.list_states)
+        # self.event_bag = EventBag(event_bag_path, record=False)
+        # self.path = Path(self.event_bag.list_states)
 
         atexit.register(self.cleanup)
 
@@ -34,7 +35,7 @@ class Renderer:
             self.dataset = DrivingDataset(self.h5_path, mode= "write")
         else:
             self.dataset = None
-            print ("Dataset allready exists, not overwriting")
+            print ("Dataset already exists, not overwriting")
             return
 
     def cleanup(self):

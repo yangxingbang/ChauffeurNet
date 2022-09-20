@@ -8,8 +8,8 @@ from config import Config
 
 class GUI:
 
-    mouse = (0,0, 0)
-    mouse_world = (0,0,0)
+    mouse = (0, 0, 0)
+    mouse_world = (0, 0, 0)
     @staticmethod
     def mouse_listener(event, x, y, flags, param):
         if event == cv2.EVENT_LBUTTONDOWN:
@@ -42,11 +42,10 @@ class GUI:
         return point_on_plane
 
     def __init__(self, window_name = "", world_path=""):
-
+        # GUI中包含鼠标订阅器，world(包含actor， world文件的路径， 交通灯文件的路径)，摄像头，按键，图片显示，窗口名，是否运行，时间步
         if not Config.linux_env:
             cv2.namedWindow(window_name)
             cv2.setMouseCallback(window_name, GUI.mouse_listener)
-
         self.world = World(world_path = world_path)
         if os.path.exists(self.world.save_path):
             self.world.load_world()

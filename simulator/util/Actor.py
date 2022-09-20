@@ -1,8 +1,9 @@
 import numpy as np
-from .transform.util import transformation_matrix, params_from_tansformation
+from simulator.util.transform.util import transformation_matrix, params_from_tansformation
 import cv2
 from math import *
 from config import Config
+
 
 class Actor:
 
@@ -19,7 +20,10 @@ class Actor:
         """
         self.c = (100,100,100)
         self.T = np.eye(4)
-        self.vertices_L = np.array([[0, 0, 0, 1]]).T #vertices defined in local coordinate system
+        # vertices defined in local coordinate system
+        self.vertices_L = np.array([[0, 0, 0, 1]]).T
+        # global coordinate system
+        # 局部坐标系中的点与单位矩阵做点积就能转换到全局坐标系？
         self.vertices_W = self.T.dot(self.vertices_L)
 
         self.DRAW_POLYGON = True
@@ -30,9 +34,9 @@ class Actor:
 
     def render(self, image, C):
         """
-        :param image: image on which this actor will be renderd on
+        :param image: image on which this actor will be rendered on
         :param C:     camera matrix
-        :return:      image with this object renderd
+        :return:      image with this object rendered
         """
         if self.vertices_W.shape[1] > 1:
             x, y = C.project(self.vertices_W)
