@@ -46,6 +46,7 @@ class GUI:
         if not Config.linux_env:
             cv2.namedWindow(window_name)
             cv2.setMouseCallback(window_name, GUI.mouse_listener)
+        # 创建了一个world对象，但它里边没有任何东西，因为初始化的actor没有赋给它
         self.world = World(world_path = world_path)
         if os.path.exists(self.world.save_path):
             self.world.load_world()

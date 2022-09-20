@@ -18,12 +18,15 @@ class Actor:
         self.vertices_W points in global coordinate system
         self.delta   when updating position, delta is the distance moved
         """
+        # 定义了一个tuple，tuple不能更改
         self.c = (100,100,100)
         self.T = np.eye(4)
         # vertices defined in local coordinate system
+        # 创建了一个列向量
         self.vertices_L = np.array([[0, 0, 0, 1]]).T
         # global coordinate system
         # 局部坐标系中的点与单位矩阵做点积就能转换到全局坐标系？
+        # 矩阵和向量怎么点积？
         self.vertices_W = self.T.dot(self.vertices_L)
 
         self.DRAW_POLYGON = True

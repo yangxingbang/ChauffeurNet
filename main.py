@@ -14,11 +14,12 @@ from download_data import check_if_data_exists
 def main():
     result = check_if_data_exists()
 
-    record = False
+    record = True # 默认值为False
     do_train = False
     just_test_network = True
 
     if record:
+        # 构造一个录制对象
         recorder = Recorder(event_bag_path="data/recorded_states.pkl", world_path="data/world.obj")
         recorder.run()
 
