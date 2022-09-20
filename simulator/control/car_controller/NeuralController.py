@@ -30,7 +30,19 @@ class NeuralController(Controller):
 
     def step(self, path_idx):
 
-        print (self.path.vertices_L.shape[1], path_idx)
+        print(self.path.vertices_L.shape[1], path_idx)
+        # 代码作者解释9：
+        # 训练和测试网络的时候，神经网络需要全局路径
+        # 全局路径存在于pkl文件中，已经被录制下来
+        # pickle包含一个状态的列表，这些状态包括把车辆画下来的车辆的坐标
+        # 我们需要找到哪些被录制下来的状态是靠近车辆的，把当前状态和未来长度的所有状态都画出来
+        # TODO(yxb): 探究一下pkl中都有什么，具体是什么数据结构
+
+        # 代码作者解释10：
+        # 把训练和测试的全局路径解耦是一件好事情，之前我做的时候不太关注过拟合
+        # 假如你使用了同样的数据去训练新模型，必须先要保证仿真器被初始化过了，对于pkl的相对路径可以被找到和加载，你不需要录制新数据
+        # 如果你用我的源码去修改，我来指导你可能更好
+        # yxb：这个作者人太好了，可惜我来晚了！
         path_idx = self.path.get_point_idx_close_to_car(self.vehicle, path_idx)
         nn_input = self.render_neural_input(path_idx)
 

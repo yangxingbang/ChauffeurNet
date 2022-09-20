@@ -296,17 +296,26 @@ class Vehicle(Actor):
         average_distance /= counts
 
         magnitude = average_distance
+        # 代码作者解释6：
+        # 我计算了每两个关键路点间的平均距离。通过观察我发现十字路口附近的点靠的比较近，直路上的点靠的比较远
+        # yxb: 明察秋毫，作者发现了弯道控制应该密集采样的秘密，他还说自己不太懂控制！
+        # 因此我插值得到了平均距离： [0 and Config.num_skip_poses * Config.max_speed] (三维空间上两个点相距多远？) 和 [0, Config.max_speed]
         interp_obj = interp1d([0, Config.num_skip_poses * Config.max_speed], [0, Config.max_speed], fill_value="extrapolate")
         self.speed = min(interp_obj(magnitude), Config.max_speed)
         if self.speed < 1.5:
             self.speed = 0
 
-
+    # 代码作者解释5：
+    # 并且，即使我使用速度预测训练了网络，我也没在测试时把它们融进车辆控制，因为我不知道怎么做，我对控制理论懂的不多
+    # 我单纯的基于一些启发计算了速度，在这里，关键路点是预测得到的，从2维转为3维(从相机到地平线的光线投射？依赖于相机的坐标系吗？), 然后传递给车辆
+    # TODO(yxb):这里有提升的空间！
     def simulate_given_waypoints(self, waypoints):
         """
         This method should not modify the speed, it will update the position and the orientation, given the desired location and orientation
         """
         self.compute_speed(waypoints)
+        # 代码作者解释7：
+        # 对于转向角，我选择两个预测轨迹点，我拿到他们的地面坐标x和z，计算车辆运动到这个地方需要多大转角
         x,z =waypoints[0][Config.test_waypoint_idx_steer],waypoints[2][Config.test_waypoint_idx_steer]
         self.compute_turn_angle(x,z)
         self.update_parameters()

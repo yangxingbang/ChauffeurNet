@@ -117,6 +117,7 @@ class AgentRNN(nn.Module):
     """
         Simple RNN as defined in https://pytorch.org/docs/stable/nn.html
         But instead of vectors we use convolutions
+        没有使用pytorch现成的RNN，为什么？
     """
     def __init__(self, config):
         super(AgentRNN, self).__init__()
@@ -179,6 +180,10 @@ class ChauffeurNet(nn.Module):
         features = self.feature_extractor(x)
 
         nn_outputs = {}
+        # 代码作者解释4：
+        # 在计算过程中，有多个点需要使用RNN来预测他们的状态，然而对于速度和转向角的预测，我没把它们添加到RNN里去.
+        # 论文当中使用RNN预测了3个输出（关键路点，所有k个迭代步的回归偏置和速度，预测时域）.
+        # 在我的代码中，我不确定怎么把速度预测放到RNN中去，因此我采用简单的多层感知机去处理速度预测
         if "steering" in Config.nn_outputs:
             nn_outputs["steering"] = self.steering_predictor(features)
         if "waypoints" in Config.nn_outputs:

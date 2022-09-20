@@ -96,6 +96,9 @@ class Path(Actor):
                 raise ValueError("too many points. there is a problem")
             return [x, y]
 
+    # 代码作者解释3：
+    # 为了复现轨迹扰动，我决定选择当前时刻的过N帧和未来N帧的范围，然后把他们修改了，
+    # 修改后他们的形状看起来像个铃铛，这样能帮助神经网络从不好的位置中恢复出来
     def apply_dropout(self, path_idx, vehicle):
         if not( path_idx > Config.num_frames and path_idx < self.vertices_W.shape[1] - Config.num_frames):return
 

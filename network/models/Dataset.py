@@ -65,6 +65,14 @@ class DrivingDataset(Dataset):
         points = np.reshape(points,(-1,2))
         num_points = points.shape[0]
         future_poses = np.zeros((num_points, 1, Config.o_res[0], Config.o_res[1]), np.float32)
+        # 代码作者解释2：
+        # 关键路点是使用softmax后得到的空间的argmax。假如我们预测了5个关键路点，那我们需要5对xy坐标的真值来求解交叉熵。
+        # 然而我认为假如网络预测了xy，这个结果不应该被过多惩罚，因此我需要一个在真值xy附近建立惩罚地图，
+        # 它应该是一个gaussian zone of reduced penalty. 我从CornerNet paper得到的这个灵感。
+        # 因为网络是对缩减分辨率以后的空间做softmax，分辨率为原来的3倍，因此预测结果是粗糙的
+        # 为了改善预测结果，对于每一个关键路点，网络学习预测x和y的argmax位置的偏置
+        # 因此每一个关键路点包含3个feature地图，其中一个对x和y应用了空间的softmax，另一个对x进行回归偏置，还有一个对y进行回归偏置
+        # 在训练的时候，仅与真值进行损失计算。用哪一个与真值计算损失？
         future_poses_regr_offset = np.zeros((num_points, 2, Config.o_res[0], Config.o_res[1]), np.float32)
 
         for i in range(num_points):
@@ -201,6 +209,11 @@ class DrivingDataset(Dataset):
         image_agent_past_poses = cv2.cvtColor(image_agent_past_poses, cv2.COLOR_BGR2GRAY)
 
         image_concatenated = np.empty((6, Config.r_res[0], Config.r_res[1]), np.uint8)
+        # 代码作者解释1：
+        # 前三个通道是车道线和交通灯，车道线是灰度图，红绿灯是rbg彩色图，那车道线和红绿灯分别占几个channel？
+        # 第4个通道是带有车辆当前位置和航向矩形框
+        # 第5个通道是route，在ui中是粗线
+        # 第6个通道是车辆前一个时间步的位置和航向，建议每隔5帧或更多帧采一个点，这样在ui中看就是一串散点
         image_concatenated[0, ...] = image_lanes[..., 0]
         image_concatenated[1, ...] = image_lanes[..., 1]
         image_concatenated[2, ...] = image_lanes[..., 2]
