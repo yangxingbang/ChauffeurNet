@@ -44,6 +44,8 @@ class World(Actor):
         self.actors = actors
         self.save_path = world_path
         self.traffic_lights_path = traffic_lights_path
+        print("world path: ", world_path)
+        print("traffic_lights_path: ", traffic_lights_path)
         # Python pass 是空语句，是为了保持程序结构的完整性
         # pass 不做任何事情，一般用做占位语句
         pass

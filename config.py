@@ -15,23 +15,26 @@ class Config:
         features_num_channels = 256
 
     # ratio is used to scale opencv shapes such as circles, which in general are defined in pixels, and do not depend on window size
-    # or camera parameters such as focal length
-    # initially all variables where designed at VGA scale
+    # or camera parameters such as focal length (焦距)
+    # initially all variables where designed at VGA （Video Graphics Array视频图形阵列） scale
     r_ratio = 640.0 / r_res[1]
     o_ratio = 640.0 / o_res[1]
 
 
     #Temporal part
+    # 横向是采样三个点，还是两个点？
     test_waypoint_idx_steer = 2
     test_waypoint_idx_speed = 5
     horizon_past = 8
     horizon_future = 8
+    # 表示每两个waypoint之间会跳过10个姿态点
     num_skip_poses = 10
     num_past_poses = horizon_past * num_skip_poses
     num_future_poses = horizon_future * num_skip_poses
     rnn_num_channels = 32
 
     #Camera params
+    # 为什么是负数？
     cam_height = -1200
 
     #Vehicle params

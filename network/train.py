@@ -18,6 +18,9 @@ class Config:
         self.experiment_name    = "whatever"
 
     def train(self, epoch):
+        # 训练过程需要五个参数，包括训练用的网络，训练用的数据集，训练用的优化器， 每笔数据
+        # 训练模型、训练数据集、训练优化器、训练过程在Config类中没定义，但是在它的子类ConfigSimpleConv中有定义
+        # 训练模型是司机网络，训练数据集用DataLoader生成，训练优化器是Adam， 训练过程是train_simple_conv
         self.training_procedure(self.model, self, self.train_loader, self.optimizer, epoch)
 
     def initialize_experiment(self):
@@ -36,6 +39,7 @@ class Config:
                 shutil.copyfile(path, destination)
 
 
+# 表示类ConfigSimpleConv继承类Config
 class ConfigSimpleConv(Config):
     def __init__(self, root_path = ".."):
         super().__init__()
@@ -54,13 +58,14 @@ class ConfigSimpleConv(Config):
                               os.path.join(root_path,"network/train.py"),
                               os.path.join(root_path,"simulator")]
 
+        # 将网络放到gpu计算
         self.model = ChauffeurNet(config = self).to(self.device)
         self.train_loader = torch.utils.data.DataLoader(dataset = DrivingDataset(event_bag_path=self.event_bag_path,
                                                                                  world_path=self.world_path,
                                                                                  debug=False),
-                                               batch_size=self.batch_size,
-                                               shuffle=self.shuffle,
-                                                num_workers=16)
+                                                       batch_size=self.batch_size,
+                                                       shuffle=self.shuffle,
+                                                       num_workers=16)
 
         # self.model.load_state_dict(torch.load("../experiments/2018-12-21_21-38-57_whatever/checkpoints/ChauffeurNet_99_120.pt"))
 
